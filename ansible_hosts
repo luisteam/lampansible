@@ -1,0 +1,5 @@
+[lamp]
+node2 ansible_ssh_host=10.0.0.11 ansible_ssh_user=vagrant
+
+[dns]
+node1 ansible_ssh_host=10.0.0.10 ansible_ssh_user=vagrant

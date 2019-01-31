@@ -1,0 +1,34 @@
+---
+- name: install apache & php
+  hosts: lamp
+  become: true
+  tasks:
+  - name: ensure apt cache is up to date
+    apt: update_cache=yes
+
+  - name: ensure packages are installed
+    apt: name="{{ item }}" state=latest
+    with_items:
+        - apache2
+        - libapache2-mod-php7.0
+        - php7.0
+        - php7.0-pgsql
+        - php-xml
+        - php7.0-gd
+
+  - name: Configure properly drupal.conf
+      copy: >
+        src=files/etc/apache2/sites-available/drupal.conf
+        dest=/etc/apache2/sites-available/drupal.conf
+
+  - name: a2ensite drupal
+    command: a2ensite drupal
+
+    notify:
+        - reload apache2
+
+    handlers:
+      - name: reload apache2
+        service: name=apache2 state=restarted
+
+
