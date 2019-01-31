@@ -4,18 +4,17 @@
   become: true
   tasks:
   - name: Ensure bind9 is installed
-    apt: name=bind9
+    apt: pkg=bind9
 
   - name: Configure properly named.conf.local
     copy: >
-      src=files/etc/bind/named.conf.local
-      dest=/etc/bind/named.conf.local
+      src=files/etc/bind/named.conf.local dest=/etc/bind/named.conf.local owner=bind group=bind mode=644
+
     notify:
       - restart bind
   - name: Set zone file example.com
     copy: >
-      src=files/var/cache/bind/db.example.com
-      dest=/var/cache/bind/db.example.com
+      src=files/var/cache/bind/db.example.com dest=/var/cache/bind/db.example.com 
       mode=644
       owner=bind
       group=bind
@@ -23,14 +22,10 @@
       - restart bind
   - name: Set zone file 10.0.0.0/24
     copy: >
-      src=files/var/cache/bind/db.10.0.0
-      dest=/var/cache/bind/db.10.0.0
-      mode=644
-      owner=bind
-      group=bind
+      src=files/var/cache/bind/db.10.0.0 dest=/var/cache/bind/db.10.0.0 owner=bind group=bind mode=644
     notify:
       - restart bind
-      
+
   handlers:
     - name: restart bind
       service: name=bind9 state=restarted

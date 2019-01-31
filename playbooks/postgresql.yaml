@@ -7,7 +7,7 @@
     apt: update_cache=yes
 
   - name: ensure packages are installed
-    apt: name={{item}}
+    apt: pkg={{item}}
     with_items:
         - postgresql
         - libpq-dev

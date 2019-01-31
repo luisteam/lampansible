@@ -7,28 +7,24 @@
     apt: update_cache=yes
 
   - name: ensure packages are installed
-    apt: name="{{ item }}" state=latest
+    apt: pkg={{ item }} state=latest
     with_items:
-        - apache2
-        - libapache2-mod-php7.0
-        - php7.0
-        - php7.0-pgsql
-        - php-xml
-        - php7.0-gd
+     - apache2
+     - libapache2-mod-php7.0
+     - php7.0
+     - php7.0-pgsql
+     - php-xml
+     - php7.0-gd
 
   - name: Configure properly drupal.conf
-      copy: >
-        src=files/etc/apache2/sites-available/drupal.conf
-        dest=/etc/apache2/sites-available/drupal.conf
+    copy: >
+      src=files/etc/apache2/sites-available/drupal.conf dest=/etc/apache2/sites-available/drupal.conf owner=www-data group=www-data mode=0644
 
-  - name: a2ensite drupal
-    command: a2ensite drupal
-
+  - name: habilitar drupal
+    command: a2ensite drupal.conf
     notify:
-        - reload apache2
+      - restart apache2
 
-    handlers:
-      - name: reload apache2
-        service: name=apache2 state=restarted
-
-
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
