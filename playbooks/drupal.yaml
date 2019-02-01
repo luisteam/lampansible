@@ -4,7 +4,7 @@
   become: true
   tasks:
   - name: Install git
-    apt: pgk=git state=latest
+    apt: pkg=git state=latest
 
   - name: Clone Drupal
     git: >
