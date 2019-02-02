@@ -3,30 +3,28 @@
   hosts: lamp
   become: true
   tasks:
-  - name: Install git
-    apt: pkg=git state=latest
+  - name: Descarga Drupal
+    get_url: 
+      url: https://ftp.drupal.org/files/projects/drupal-8.6.7.zip
+      dest: /home/vagrant/drupal-8.6.7.zip
 
-  - name: Clone Drupal
-    git: >
-      repo=http://git.drupal.org/project/drupal.git
-      dest=/var/www/html/drupal/
-      update=no
-  
-  - name: Create settings.php
-    command: cp /var/www/html/drupal/sites/default/default.settings.php /var/www/html/drupal/sites/default/settings.php
+  - name: Unzip Drupal
+    unarchive:
+      src: /home/vagrant/drupal-8.6.7.zip
+      dest: /var/www/html
+      remote_src: yes
+      owner: www-data
+      group: www-data
+      mode: 0644
 
-  - name: Create services.yml
-    command: cp /var/www/html/drupal/sites/default/default.services.yml /var/www/html/drupal/sites/default/services.yml
+  - name: Enable fast cgi
+    command: a2enmod proxy_fcgi
 
-  - name: Update permissions of settings.php
-    file: path=/var/www/html/drupal/sites/default/settings.php mode=777
-  
-  - name: Update permissions of services.yml
-    file: path=/var/www/html/drupal/sites/default/services.yml mode=777
-  
-  - name: Update permissions of files directory
-    file: >
-      path=/var/www/html/drupal/sites/default/files
-      mode=777
-      state=directory
-      recurse=yes
+  - name: Habilitamos la configuración de fpm
+    command: a2enconf php7.0-fpm
+    notify:
+      - restart apache2
+
+  handlers:
+    - name: restart apache2
+      service: name=apache2 state=restarted
