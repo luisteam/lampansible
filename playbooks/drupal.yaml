@@ -3,6 +3,9 @@
   hosts: lamp
   become: true
   tasks:
+  - name: Ensure zip is installed
+    apt: pkg=zip
+
   - name: Descarga Drupal
     get_url: 
       url: https://ftp.drupal.org/files/projects/drupal-8.6.7.zip
