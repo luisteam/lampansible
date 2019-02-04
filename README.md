@@ -11,6 +11,6 @@ para acceder a un drupal totalmente configurado en drupal.example.com.
 
 Start with:
 
-*Vagrant up
+*Vagrant up*
 
-*ansible-playbook escenario.yaml
+*ansible-playbook escenario.yaml*
