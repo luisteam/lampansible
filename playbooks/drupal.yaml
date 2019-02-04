@@ -45,6 +45,11 @@
       --db-url=pgsql://luis:luis@10.0.0.10/newdb 
       -r /var/www/html/drupal-8.6.7 -y
 
+  - name: Disable CSS with drush
+    command: drush config-set system.performance css.preprocess 0 -r /var/www/html/drupal-8.6.7 -y
+
+  - name: Disable JS with drush
+    command: drush config-set system.performance js.preprocess 0 -r /var/www/html/drupal-8.6.7 -y
     notify:
       - restart apache2
 

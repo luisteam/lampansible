@@ -54,7 +54,7 @@
       ansible_ssh_pipelining: true
     postgresql_user:
       db: newdb
-      name: luis
+      name: luis2
       password: luis
       priv: "ALL"
       expires: infinity
