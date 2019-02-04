@@ -21,10 +21,30 @@
       mode: 0755
 
   - name: Enable fast cgi
-    command: a2enmod proxy_fcgi
+    command: a2enmod proxy_fcgi setenvif
 
   - name: Habilitamos la configuración de fpm
     command: a2enconf php7.0-fpm
+    notify:
+      - restart apache2
+
+  - name: Download Drush
+    get_url:
+      url: https://github.com/drush-ops/drush/releases/download/8.1.17/drush.phar
+      dest: /usr/local/bin/drush
+      mode: 0755
+      owner: www-data
+      group: www-data
+
+  - name: Install Drush
+    command: >
+      drush si standard -y
+      --site-name="Drupal site"
+      --account-name="luis"
+      --account-pass="luis"
+      --db-url=pgsql://luis:luis@10.0.0.10/newdb 
+      -r /var/www/html/drupal-8.6.7 -y
+
     notify:
       - restart apache2
 

@@ -16,7 +16,27 @@
   - name: Ensure the PostgreSQL service is running
     service: name=postgresql state=started enabled=yes
 
+  - name: config postgresql.conf
+    copy: >
+      src=files/etc/postgresql/postgresql.conf
+      dest=/etc/postgresql/9.6/main/postgresql.conf
 
+  - name: config pg_hba.conf
+    copy: >
+      src=files/etc/postgresql/pg_hba.conf
+      dest=/etc/postgresql/9.6/main/pg_hba.conf
+
+  - name: chmod and chown postgres files
+    file:
+      path: /etc/postgresql/9.6/main
+      owner: postgres
+      group: postgres
+    with_items:
+      - postgresql.conf
+      - pg_hba.conf
+  
+    notify:
+      - restart postgresql
 
   - name: PostgreSQL | Create new databases
     become: yes
@@ -34,8 +54,15 @@
       ansible_ssh_pipelining: true
     postgresql_user:
       db: newdb
-      name: luis111
-      password: luis111
+      name: luis
+      password: luis
       priv: "ALL"
       expires: infinity
+
+    notify:
+      - restart postgresql
+
+  handlers:
+    - name: restart postgresql
+      command: systemctl restart postgresql
 
