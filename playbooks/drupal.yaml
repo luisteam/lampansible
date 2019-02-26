@@ -3,8 +3,8 @@
   hosts: lamp
   become: true
   tasks:
-   - name: ensure packages are installed
-    apt: pkg={{ item }} state=latest
+  - name: ensure packages are installed
+    apt: pkg="{{ item }}" state=latest
     with_items:
      - zip
      - sendmail
